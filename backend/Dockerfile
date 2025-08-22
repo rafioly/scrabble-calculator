@@ -1,16 +1,17 @@
-# This Dockerfile assumes the application JAR has already been built locally
-# by running './gradlew bootJar' from the project root.
-
-# Stage 1: Use a lightweight Java runtime
+# Use a slim JRE for a smaller, more secure final image.
 FROM openjdk:21-jdk-slim
+
 WORKDIR /app
 
-# Stage 2: Copy the pre-built JAR from the build context into the image
-# The build context is the project root, as defined in docker-compose.yml
+# Copy the pre-built JAR from the build context into the image.
+# IMPORTANT: You must run './gradlew build' in the 'backend' directory first!
 COPY build/libs/*.jar app.jar
 
 # Set the active Spring profile for the application
-ENV SPRING_PROFILES_ACTIVE=caching
+ENV SPRING_PROFILES_ACTIVE=default
 
-# Stage 3: Set the entrypoint to run the application
+# Expose the port the application runs on
+EXPOSE 8080
+
+# The command to run the application when the container starts
 ENTRYPOINT ["java", "-jar", "app.jar"]
