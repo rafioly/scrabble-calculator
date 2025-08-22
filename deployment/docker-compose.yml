@@ -21,7 +21,7 @@ services:
   backend:
     build:
       context: ../
-      dockerfile: Dockerfile
+      dockerfile: ../backend/Dockerfile
     restart: always
     # Update depends_on to wait for the db to be healthy, not just started
     depends_on:

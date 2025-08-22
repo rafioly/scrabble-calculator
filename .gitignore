@@ -3,7 +3,7 @@ build/
 .gradle/
 
 # Exclude Gradle wrapper JAR from the ignore list
-!gradle/wrapper/gradle-wrapper.jar
+!backend/gradle/wrapper/gradle-wrapper.jar
 
 # The following lines are unusual but are kept to preserve existing behavior.
 # They seem to intend to NOT ignore build/ and out/ directories inside src/main and src/test.
