@@ -1,0 +1,14 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #f0f2f5;
+}
+
+/* Basic dark mode support */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #242424;
+  }
+}

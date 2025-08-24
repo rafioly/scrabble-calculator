@@ -8,10 +8,8 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - "5432:5432"
-    # Add a named volume for stable, persistent data
     volumes:
       - scrabble-db-data:/var/lib/postgresql/data
-    # Add a healthcheck to ensure the database is ready for connections
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d scrabble"]
       interval: 10s
@@ -23,7 +21,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     restart: always
-    # Update depends_on to wait for the db to be healthy, not just started
     depends_on:
       db:
         condition: service_healthy
@@ -35,6 +32,15 @@ services:
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_DATASOURCE_PASSWORD=password
 
-# Define the named volume to ensure data persistence
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
 volumes:
   scrabble-db-data:
