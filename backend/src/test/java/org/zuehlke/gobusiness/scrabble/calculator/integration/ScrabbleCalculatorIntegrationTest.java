@@ -66,13 +66,13 @@ class ScrabbleCalculatorIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode()); // Expect 200 OK
         assertNotNull(response.getBody());
         assertTrue(response.getBody().isSuccess());
-        assertEquals("hello", response.getBody().getData().word());
+        assertEquals("HELLO", response.getBody().getData().word());
         assertNull(response.getHeaders().getLocation()); // Verify no Location header
 
         // Assert on the Database State
         List<LeaderboardEntry> entries = leaderboardRepository.findAll();
         assertEquals(1, entries.size());
-        assertEquals("hello", entries.getFirst().getWord());
+        assertEquals("HELLO", entries.getFirst().getWord());
         assertEquals(8, entries.getFirst().getScore());
     }
 
@@ -95,7 +95,7 @@ class ScrabbleCalculatorIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<LeaderboardEntryDto> leaderboard = Objects.requireNonNull(response.getBody()).getData();
         assertEquals(2, leaderboard.size());
-        assertEquals("cabbage", leaderboard.getFirst().word());
+        assertEquals("CABBAGE", leaderboard.getFirst().word());
         assertEquals(Optional.of(1), leaderboard.getFirst().rank());
     }
 
@@ -110,6 +110,5 @@ class ScrabbleCalculatorIntegrationTest {
         for (char c = 'A'; c <= 'Z'; c++) {
             assertTrue(Objects.requireNonNull(response.getBody()).getData().containsKey(c), "Missing character: " + c);
         }
-
     }
 }
