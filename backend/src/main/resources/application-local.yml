@@ -1,0 +1,4 @@
+# Configuration for running the application locally, connecting to the Dockerized database.
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scrabble
