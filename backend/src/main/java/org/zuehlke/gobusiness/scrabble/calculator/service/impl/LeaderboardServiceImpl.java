@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
-@Profile("!caching") // Active by default, when 'caching' profile is NOT active
 @RequiredArgsConstructor
 public class LeaderboardServiceImpl implements LeaderboardService {
 
