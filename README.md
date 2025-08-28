@@ -41,7 +41,7 @@ The project is a monorepo with the following structure:
 
 ## Running the Application
 
-The entire application stack (database, backend, and frontend) is containerized and managed by Docker Compose.
+The entire application stack (database, backend, and frontend) is containerized and managed by Docker Compose. Both the frontend and backend are built automatically within their respective Docker containers.
 
 ### Prerequisites
 
@@ -59,10 +59,10 @@ The entire application stack (database, backend, and frontend) is containerized 
     docker-compose up --build
     ```
 
-    This command will:
+    This single command will:
     - Pull the PostgreSQL image.
-    - Build the Docker image for the backend service.
-    - Build the Docker image for the frontend service.
+    - Build the Docker image for the backend service, including compiling the application.
+    - Build the Docker image for the frontend service, including compiling the application.
     - Start the database, backend, and frontend containers.
 
 4.  **Wait for all services to start.** The backend will wait for the database to be healthy before it starts. The frontend will wait for the backend.
