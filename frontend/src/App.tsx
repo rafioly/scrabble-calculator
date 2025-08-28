@@ -17,7 +17,6 @@ function App() {
     const [tiles, setTiles] = useState<string[]>(Array(TILE_COUNT).fill(''));
     const [score, setScore] = useState<number>(0);
     const [scoringRules, setScoringRules] = useState<ScoringRules>({});
-    const [isScoringRulesOpen, setScoringRulesOpen] = useState<boolean>(false);
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
     const [isLeaderboardOpen, setLeaderboardOpen] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -86,7 +85,7 @@ function App() {
 
     const handleReset = () => {
         setTiles(Array(TILE_COUNT).fill(''));
-        inputRefs.current[0]?.focus(); // Simple focus is fine here, as the tile will be empty
+        inputRefs.current[0]?.focus();
         setError(null);
         setSuccess(null);
     };
@@ -134,10 +133,6 @@ function App() {
         }
     };
 
-    const handleShowRules = () => {
-        setScoringRulesOpen(true);
-    }
-
     // --- Render Method ---
     return (
         <Box
@@ -146,86 +141,80 @@ function App() {
             alignItems="center"
             minHeight="100vh"
         >
-            <Paper elevation={3} sx={{ p: 4, borderRadius: 2, textAlign: 'center', maxWidth: 600 }}>
-                <Typography variant="h3" gutterBottom>
-                    Scrabble Points Calculator
-                </Typography>
+            <Stack direction="row" spacing={4}>
+                <Paper elevation={3} sx={{ p: 4, borderRadius: 2, textAlign: 'center', maxWidth: 600 }}>
+                    <Typography variant="h3" gutterBottom>
+                        Scrabble Points Calculator
+                    </Typography>
 
-                {/* --- Input Tiles --- */}
-                <Typography variant="h6" gutterBottom>Enter your word:</Typography>
-                <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 2 }}>
-                    {tiles.map((tile, index) => (
-                        <TextField
-                            key={index}
-                            value={tile}
-                            onChange={(e) => handleTileChange(e, index)}
-                            onKeyDown={(e) => handleKeyDown(e, index)}
-                            onClick={(e: any) => e.target.select()} // Select text on click for easy replacement
-                            inputRef={(el) => (inputRefs.current[index] = el)}
-                            inputProps={{ maxLength: 1, style: { textAlign: 'center', fontSize: '1.5rem' } }}
-                            sx={{ width: 60 }}
-                        />
-                    ))}
-                </Stack>
+                    {/* --- Input Tiles --- */}
+                    <Typography variant="h6" gutterBottom>Enter your word:</Typography>
+                    <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 2 }}>
+                        {tiles.map((tile, index) => (
+                            <TextField
+                                key={index}
+                                value={tile}
+                                onChange={(e) => handleTileChange(e, index)}
+                                onKeyDown={(e) => handleKeyDown(e, index)}
+                                onClick={(e: any) => e.target.select()} // Select text on click for easy replacement
+                                inputRef={(el) => (inputRefs.current[index] = el)}
+                                inputProps={{ maxLength: 1, style: { textAlign: 'center', fontSize: '1.5rem' } }}
+                                sx={{ width: 60 }}
+                            />
+                        ))}
+                    </Stack>
 
-                {/* --- Score Display --- */}
-                <Typography variant="h4" sx={{ my: 3 }}>
-                    Current Score: {score}
-                </Typography>
+                    {/* --- Score Display --- */}
+                    <Typography variant="h4" sx={{ my: 3 }}>
+                        Current Score: {score}
+                    </Typography>
 
-                {/* --- Action Buttons --- */}
-                <Stack direction="row" spacing={2} justifyContent="center">
-                    <Button variant="outlined" color="secondary" onClick={handleReset}>Reset Tiles</Button>
-                    <Button variant="contained" color="primary" onClick={handleSaveScore}>Save Score</Button>
-                    <Button variant="contained" color="info" onClick={handleViewScores}>View Top Scores</Button>
-                    <Button variant="contained" color="info" onClick={handleShowRules}>Rules</Button>
-                </Stack>
+                    {/* --- Action Buttons --- */}
+                    <Stack direction="row" spacing={2} justifyContent="center">
+                        <Button variant="outlined" color="secondary" onClick={handleReset}>Reset Tiles</Button>
+                        <Button variant="contained" color="primary" onClick={handleSaveScore}>Save Score</Button>
+                        <Button variant="contained" color="info" onClick={handleViewScores}>View Top Scores</Button>
+                    </Stack>
 
-                {/* --- Alerts --- */}
-                <Box sx={{ mt: 2, height: 60 }}>
-                    {error && <Alert severity="error">{error}</Alert>}
-                    {success && <Alert severity="success">{success}</Alert>}
-                </Box>
+                    {/* --- Alerts --- */}
+                    <Box sx={{ mt: 2, height: 60 }}>
+                        {error && <Alert severity="error">{error}</Alert>}
+                        {success && <Alert severity="success">{success}</Alert>}
+                    </Box>
 
-                {/* --- Leaderboard Dialog --- */}
-                <Dialog open={isLeaderboardOpen} onClose={() => setLeaderboardOpen(false)} fullWidth>
-                    <DialogTitle>Top 10 Scores</DialogTitle>
-                    <DialogContent>
-                        <List>
-                            {leaderboard.map((entry, index) => (
-                                <ListItem key={index}>
-                                    <ListItemText primary={`${index + 1}. ${entry.word}` } secondary={`Score: ${entry.score}`} />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setLeaderboardOpen(false)}>Close</Button>
-                    </DialogActions>
-                </Dialog>
-
-                {/* --- Scoring Rules Dialog --- */}
-                <Dialog open={isScoringRulesOpen} onClose={() => setScoringRulesOpen(false)} fullWidth>
-                    <DialogTitle>Scoring Rules</DialogTitle>
-                    <DialogContent>
-                        <Box
-                            display="grid"
-                            gridTemplateColumns="repeat(3, 1fr)"
-                            gap={2}
-                            sx={{ mt: 1, textAlign: 'center' }}
-                        >
-                            {Object.keys(scoringRules).sort().map((letter) => (
-                                <Typography key={letter}>
-                                    {`${letter}: ${scoringRules[letter]}`}
-                                </Typography>
-                            ))}
-                        </Box>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setScoringRulesOpen(false)}>Close</Button>
-                    </DialogActions>
-                </Dialog>
-            </Paper>
+                    {/* --- Leaderboard Dialog --- */}
+                    <Dialog open={isLeaderboardOpen} onClose={() => setLeaderboardOpen(false)} fullWidth>
+                        <DialogTitle>Top 10 Scores</DialogTitle>
+                        <DialogContent>
+                            <List>
+                                {leaderboard.map((entry, index) => (
+                                    <ListItem key={index}>
+                                        <ListItemText primary={`${index + 1}. ${entry.word}` } secondary={`Score: ${entry.score}`} />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setLeaderboardOpen(false)}>Close</Button>
+                        </DialogActions>
+                    </Dialog>
+                </Paper>
+                <Paper elevation={3} sx={{ p: 4, borderRadius: 2, textAlign: 'center', width: 200 }}>
+                    <Typography variant="h5" gutterBottom>
+                        Scoring Rules
+                    </Typography>
+                    <Box
+                        display="grid"
+                        gridTemplateColumns="repeat(3, 1fr)"
+                        gap={2}
+                        sx={{ mt: 1, textAlign: 'left' }}
+                    >
+                        {Object.keys(scoringRules).sort().map((letter) => (
+                            <Typography key={letter}><strong>{letter}</strong>: {scoringRules[letter]}</Typography>
+                        ))}
+                    </Box>
+                </Paper>
+            </Stack>
         </Box>
     );
 }
