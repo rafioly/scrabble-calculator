@@ -36,3 +36,35 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
 }
+
+// Configure all test tasks to use JUnit Platform
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
+
+// Configure the default 'test' task to run only unit tests
+tasks.test {
+    description = "Runs unit tests."
+    filter {
+        // Exclude integration tests from the default test run
+        excludeTestsMatching("*IntegrationTest")
+    }
+}
+
+// Define and configure the new 'integrationTest' task
+val integrationTest = tasks.register<Test>("integrationTest") {
+    description = "Runs integration tests."
+    group = "verification"
+
+    filter {
+        includeTestsMatching("*IntegrationTest")
+    }
+
+    // Ensure integration tests run after unit tests
+    shouldRunAfter(tasks.test)
+}
+
+// Make the 'check' task (part of the default build lifecycle) run integration tests
+tasks.check {
+    dependsOn(integrationTest)
+}
