@@ -43,22 +43,23 @@ class LeaderboardServiceImplTest {
     @DisplayName("Should calculate score and save the entry when a new score is submitted")
     void saveNewScore_calculatesScoreAndSavesEntry() {
         String word = "test";
+        String normalizedWord = normalizeWord(word);
         int expectedScore = 4;
 
-        when(scoringService.calculateScore(word)).thenReturn(expectedScore);
+        when(scoringService.calculateScore(normalizedWord)).thenReturn(expectedScore);
         when(leaderboardRepository.save(any(LeaderboardEntry.class))).thenReturn(new LeaderboardEntry()); // Return dummy object
         doNothing().when(validator).validate(anyString());
 
         LeaderboardEntryDto resultDto = leaderboardService.saveNewScore(word);
 
-        verify(scoringService).calculateScore(word);
+        verify(scoringService).calculateScore(normalizedWord);
         verify(leaderboardRepository).save(argThat(entry ->
-                entry.getWord().equals(word) && entry.getScore() == expectedScore
+                entry.getWord().equals(normalizedWord) && entry.getScore() == expectedScore
         ));
 
         // Assert on the returned DTO (no ID)
         assertNotNull(resultDto);
-        assertEquals(word, resultDto.word());
+        assertEquals(word.toUpperCase(), resultDto.word());
         assertEquals(expectedScore, resultDto.score());
         assertTrue(resultDto.rank().isEmpty());
     }
@@ -68,7 +69,8 @@ class LeaderboardServiceImplTest {
     void saveNewScore_invalidWord_throwsException() {
         // Arrange
         String word = "invalid123";
-        doThrow(InvalidWordException.class).when(validator).validate(word);
+        String normalizedWord = normalizeWord(word);
+        doThrow(InvalidWordException.class).when(validator).validate(normalizedWord);
 
         // Act and Assert
         assertThrows(InvalidWordException.class, () -> leaderboardService.saveNewScore(word));
@@ -93,5 +95,7 @@ class LeaderboardServiceImplTest {
         assertEquals(new LeaderboardEntryDto(Optional.of(2), "word2", 5), result.get(1));
     }
 
-    // Tests for getLeaderboardEntry by ID have been removed as the method is no longer part of the service.
+    private String normalizeWord(String word) {
+        return word.trim().toUpperCase();
+    }
 }
