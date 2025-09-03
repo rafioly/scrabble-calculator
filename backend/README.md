@@ -4,22 +4,24 @@ This directory contains the Java/Spring Boot backend for the Scrabble Points Cal
 
 ## Running the Backend in Development
 
-To run the backend in a local development environment, follow these steps:
+To run the backend on your local machine for development, it is recommended to use the `local` Spring profile. This allows you to easily manage database connections without modifying the main configuration files.
 
-1.  **Navigate to this directory** (`/backend`) in your terminal.
+1.  **Configure your local database connection:**
+    Open the `src/main/resources/application-local.yml` file. Verify that the `spring.datasource.url` property and other credentials match your local PostgreSQL setup.
 
-2.  **Run the application** using the Gradle wrapper:
+2.  **Run the application with the `local` profile:**
+    Navigate to this directory (`/backend`) in your terminal and run the following command:
 
     ```sh
-    ./gradlew bootRun
+    ./gradlew bootRun --args='--spring.profiles.active=local'
     ```
 
-This will start the Spring Boot application, and the API will be accessible at [http://localhost:8080](http://localhost:8080) by default.
+This command starts the Spring Boot application and tells it to apply the settings from `application-local.yml`. The API will be accessible at [http://localhost:8080](http://localhost:8080) by default.
 
 ### Prerequisites
 
 - **Java 21** must be installed on your machine.
-- **A PostgreSQL database** must be running and accessible to the application. You will need to configure the database connection details in `src/main/resources/application.properties` to match your local setup.
+- **A PostgreSQL database** must be running and accessible to the application as configured in `application-local.yml`.
 
 ---
 
@@ -53,58 +55,4 @@ This project uses `springdoc-openapi` to generate interactive API documentation 
 Once the application is running, you can access and interact with the API at:
 **[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
 
-The UI allows you to view all available endpoints, see their request/response schemas, and execute API calls directly from your browser.
-
-A static summary of the endpoints is provided below for quick reference.
-
-### Scoring Rules
-
-- **`GET /api/scoring-rules`**
-  - **Description:** Retrieves the mapping of letters to their Scrabble point values.
-  - **Success Response (200 OK):**
-    ```json
-    {
-      "success": true,
-      "message": "Data retrieved successfully.",
-      "data": {
-        "A": 1, "B": 3, "C": 3, ...
-      }
-    }
-    ```
-
-### Leaderboard
-
-- **`GET /api/leaderboards`**
-  - **Description:** Retrieves the top scores from the leaderboard.
-  - **Query Parameters:**
-    - `top` (optional, default: 10): The number of top scores to return.
-  - **Success Response (200 OK):**
-    ```json
-    {
-      "success": true,
-      "message": "Data retrieved successfully.",
-      "data": [
-        { "rank": 1, "word": "HELLO", "score": 8 },
-        { "rank": 2, "word": "WORLD", "score": 7 }
-      ]
-    }
-    ```
-
-- **`POST /api/leaderboards`**
-  - **Description:** Submits a new word to be scored and saved to the leaderboard.
-  - **Request Body:**
-    ```json
-    { "word": "EXAMPLE" }
-    ```
-  - **Success Response (200 OK):**
-    ```json
-    {
-      "success": true,
-      "message": "New score saved successfully.",
-      "data": { "word": "EXAMPLE", "score": 18 }
-    }
-    ```
-
-- **`DELETE /api/leaderboards`**
-  - **Description:** Deletes all scores from the leaderboard.
-  - **Success Response (204 No Content):** An empty response indicating success.
+The UI is the primary source of truth for all API endpoints, request/response schemas, and allows you to try executing GET API calls directly from your browser.

@@ -37,6 +37,10 @@ The project is a monorepo with the following structure:
 └── README.md        # This file
 ```
 
+For more detailed information on running each module independently, including instructions for local development and API documentation, please see their respective README files:
+- [`backend/README.md`](./backend/README.md)
+- [`frontend/README.md`](./frontend/README.md)
+
 --- 
 
 ## Running the Application
