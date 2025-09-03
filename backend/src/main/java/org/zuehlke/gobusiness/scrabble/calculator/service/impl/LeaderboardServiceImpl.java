@@ -50,4 +50,9 @@ public class LeaderboardServiceImpl implements LeaderboardService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAllScores() {
+        leaderboardRepository.deleteAll();
+    }
 }

@@ -7,4 +7,5 @@ import java.util.List;
 public interface LeaderboardService {
     LeaderboardEntryDto saveNewScore(String word);
     List<LeaderboardEntryDto> getLeaderboard(int top);
+    void deleteAllScores();
 }
