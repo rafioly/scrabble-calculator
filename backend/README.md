@@ -48,7 +48,14 @@ Test reports can be found in the `build/reports/tests/` directory after the test
 
 ## API Documentation
 
-The backend exposes a RESTful API for calculating scores and managing the leaderboard.
+This project uses `springdoc-openapi` to generate interactive API documentation with Swagger UI.
+
+Once the application is running, you can access and interact with the API at:
+**[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
+
+The UI allows you to view all available endpoints, see their request/response schemas, and execute API calls directly from your browser.
+
+A static summary of the endpoints is provided below for quick reference.
 
 ### Scoring Rules
 

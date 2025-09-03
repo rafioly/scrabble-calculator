@@ -8,7 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.zuehlke.gobusiness.scrabble.calculator.dto.ApiResponse;
+import org.zuehlke.gobusiness.scrabble.calculator.dto.ApiResponseDto;
 
 import java.util.stream.Collectors;
 
@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Object>> handleMethodValidationFailed(MethodArgumentNotValidException ex, WebRequest request) {
-        ApiResponse<Object> apiResponse = ApiResponse.error(
+    public ResponseEntity<ApiResponseDto<Object>> handleMethodValidationFailed(MethodArgumentNotValidException ex, WebRequest request) {
+        ApiResponseDto<Object> apiResponse = ApiResponseDto.error(
                 ex.getBindingResult().getFieldErrors()
                         .stream().map(FieldError::getDefaultMessage)
                         .collect(Collectors.joining(", ")));
@@ -29,15 +29,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidWordException.class)
-    public ResponseEntity<ApiResponse<Object>> handleInvalidWord(InvalidWordException ex, WebRequest request) {
-        ApiResponse<Object> apiResponse = ApiResponse.error(ex.getMessage());
+    public ResponseEntity<ApiResponseDto<Object>> handleInvalidWord(InvalidWordException ex, WebRequest request) {
+        ApiResponseDto<Object> apiResponse = ApiResponseDto.error(ex.getMessage());
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<Object>> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
+    public ResponseEntity<ApiResponseDto<Object>> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
         String message = "This word already exists on the leaderboard. Please submit a unique word.";
-        ApiResponse<Object> apiResponse = ApiResponse.error(message);
+        ApiResponseDto<Object> apiResponse = ApiResponseDto.error(message);
         return new ResponseEntity<>(apiResponse, HttpStatus.CONFLICT);
     }
 }

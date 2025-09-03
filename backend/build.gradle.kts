@@ -28,6 +28,9 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
 
+    // API Documentation
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+
     // Test Dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")

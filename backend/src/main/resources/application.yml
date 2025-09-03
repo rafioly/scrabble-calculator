@@ -9,3 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+springdoc:
+  swagger-ui:
+    supported-submit-methods: [get]
