@@ -6,12 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.1",
-    "vite": "^7.1.2"
+    "jsdom": "^24.1.0",
+    "vite": "^7.1.2",
+    "vitest": "^1.6.0"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

@@ -1,8 +1,12 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react';
+import type { UserConfig } from 'vite';
+import type { InlineConfig } from 'vitest';
 
-// https://vite.dev/config/
-export default defineConfig({
+interface VitestConfig extends UserConfig {
+  test: InlineConfig;
+}
+
+const config: VitestConfig = {
   plugins: [react()],
   server: {
     proxy: {
@@ -12,4 +16,12 @@ export default defineConfig({
       },
     },
   },
-})
+
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.ts',
+  },
+};
+
+export default config;
