@@ -1,12 +1,13 @@
 package org.zuehlke.gobusiness.scrabble.calculator.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.zuehlke.gobusiness.scrabble.calculator.domain.LeaderboardEntry;
 import org.zuehlke.gobusiness.scrabble.calculator.dto.LeaderboardEntryDto;
+import org.zuehlke.gobusiness.scrabble.calculator.exception.InvalidWordException;
 import org.zuehlke.gobusiness.scrabble.calculator.repository.LeaderboardRepository;
+import org.zuehlke.gobusiness.scrabble.calculator.service.DictionaryService;
 import org.zuehlke.gobusiness.scrabble.calculator.service.LeaderboardService;
 import org.zuehlke.gobusiness.scrabble.calculator.service.ScoringService;
 import org.zuehlke.gobusiness.scrabble.calculator.validator.WordValidator;
@@ -23,20 +24,23 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     private final LeaderboardRepository leaderboardRepository;
     private final ScoringService scoringService;
     private final WordValidator wordValidator;
+    private final DictionaryService dictionaryService;
 
     @Override
     public LeaderboardEntryDto saveNewScore(String word) {
-        // First, normalize the word to ensure consistency.
+
         final String normalizedWord = word.trim().toUpperCase();
 
-        // Then, validate the normalized word. This will throw an exception if the word is invalid.
         wordValidator.validate(normalizedWord);
 
-        // If validation passes, proceed with scoring and saving using the normalized word.
+        if (!dictionaryService.isValidWord(normalizedWord)) {
+            throw new InvalidWordException("'" + normalizedWord + "' is not a valid English word.");
+        }
+
         int score = scoringService.calculateScore(normalizedWord);
         LeaderboardEntry entryToSave = new LeaderboardEntry(normalizedWord, score);
         leaderboardRepository.save(entryToSave);
-        
+
         return new LeaderboardEntryDto(Optional.empty(), normalizedWord, score);
     }
 
