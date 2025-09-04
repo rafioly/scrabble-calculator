@@ -9,16 +9,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.zuehlke.gobusiness.scrabble.calculator.controller.ScrabbleCalculatorController;
+import org.zuehlke.gobusiness.scrabble.calculator.controller.LeaderboardController;
 import org.zuehlke.gobusiness.scrabble.calculator.dto.LeaderboardEntryDto;
 import org.zuehlke.gobusiness.scrabble.calculator.dto.WordSubmissionDto;
 import org.zuehlke.gobusiness.scrabble.calculator.exception.GlobalExceptionHandler;
 import org.zuehlke.gobusiness.scrabble.calculator.exception.InvalidWordException;
 import org.zuehlke.gobusiness.scrabble.calculator.service.LeaderboardService;
-import org.zuehlke.gobusiness.scrabble.calculator.service.ScoringService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -29,9 +27,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest({ScrabbleCalculatorController.class, GlobalExceptionHandler.class})
-@DisplayName("Unit Tests for API Controller Layer")
-class ScrabbleCalculatorControllerTest {
+@WebMvcTest({LeaderboardController.class, GlobalExceptionHandler.class})
+@DisplayName("Unit Tests for Leaderboard API Controller")
+class LeaderboardControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,9 +39,6 @@ class ScrabbleCalculatorControllerTest {
 
     @MockBean
     private LeaderboardService leaderboardService;
-
-    @MockBean
-    private ScoringService scoringService;
 
     @Test
     @DisplayName("POST /api/leaderboards should return 200 OK with the new score")
@@ -67,7 +62,6 @@ class ScrabbleCalculatorControllerTest {
         WordSubmissionDto submission = new WordSubmissionDto("invalid123");
         String errorMessage = "Word must only contain alphabetic characters.";
 
-        // Mock the service to throw the exception our @ControllerAdvice is listening for
         when(leaderboardService.saveNewScore(anyString()))
                 .thenThrow(new InvalidWordException(errorMessage));
 
@@ -109,16 +103,5 @@ class ScrabbleCalculatorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].word").value("word1"));
-    }
-
-    @Test
-    @DisplayName("GET /api/scoring-rules should return the map of letter scores")
-    void getScoringRules_returnsScoreMap() throws Exception {
-        when(scoringService.getLetterScores()).thenReturn(Map.of('A', 1, 'B', 3));
-
-        mockMvc.perform(get("/api/scoring-rules"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.A").value(1));
     }
 }
