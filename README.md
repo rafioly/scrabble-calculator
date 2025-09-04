@@ -9,7 +9,7 @@ This project is structured as a monorepo, containing a Java/Spring Boot backend 
 ## Technology Stack
 
 ### Backend
-- **Java 17**
+- **Java 21**
 - **Spring Boot 3**
 - **PostgreSQL**: Database for the leaderboard.
 - **Gradle**: Build tool.
